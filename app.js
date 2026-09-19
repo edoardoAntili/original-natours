@@ -33,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set security HTTP headers
 app.use(
   helmet({
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     contentSecurityPolicy: {
       directives: {
         scriptSrc: [
