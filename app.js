@@ -33,7 +33,41 @@ app.set('query parser', 'extended');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
-app.use(helmet());
+app.use(
+  helmet({
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: [
+          "'self'",
+          'https://unpkg.com',
+          'https://cdnjs.cloudflare.com',
+          'https://js.stripe.com',
+        ],
+        styleSrc: [
+          "'self'",
+          'https://unpkg.com',
+          'https://fonts.googleapis.com',
+        ],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'https://tile.openstreetmap.org',
+          'https://unpkg.com',
+          'https://*.tile.openstreetmap.org',
+        ],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+        connectSrc: [
+          "'self'",
+          'https://unpkg.com',
+          'https://cdnjs.cloudflare.com',
+          'https://js.stripe.com',
+        ],
+        frameSrc: ["'self'", 'https://js.stripe.com'],
+      },
+    },
+  }),
+);
 
 // Implement CORS
 app.use(cors());
