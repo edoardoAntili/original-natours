@@ -38,7 +38,7 @@ app.use(helmet());
 // Implement CORS
 app.use(cors());
 
-app.options('*', cors());
+app.options('/*path', cors());
 
 app.use(compression());
 
