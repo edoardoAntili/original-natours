@@ -14,7 +14,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'payment',
-    success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}&bookedDate=${req.body.bookedDate}`,
+    success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
@@ -42,26 +42,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
-  const { tour, user, price, bookedDate } = req.query;
+  const { tour, user, price } = req.query;
 
-  if (!tour || !user || !price || !bookedDate) return next();
+  if (!tour || !user || !price) return next();
 
   await Booking.create({
     tour,
     user,
     price,
   });
-
-  const date = await StartDate.findOne({ tour, date: new Date(bookedDate) });
-
-  if (date.soldOut)
-    throw new AppError(
-      'This date is sold out, please choose another date!',
-      400,
-    );
-
-  date.participants += 1;
-  await date.save();
 
   res.redirect(req.originalUrl.split('?')[0]);
 });

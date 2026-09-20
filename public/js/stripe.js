@@ -9,16 +9,10 @@ const stripe = Stripe(
 
 export const bookTour = async (tourId) => {
   try {
-    const bookedDate =
-      'Sat Jun 19 2021 09:00:00 GMT+0200 (Central European Summer Time)';
-
     // 1) Get checkout session from API
     const session = await axios({
       method: 'POST',
       url: `/api/v1/bookings/checkout-session/${tourId}`,
-      data: {
-        bookedDate,
-      },
       withCredentials: true,
     });
     // console.log(session);
